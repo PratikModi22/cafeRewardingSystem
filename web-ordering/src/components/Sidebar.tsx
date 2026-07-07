@@ -9,7 +9,8 @@ import {
   BarChart3,
   Settings as SettingsIcon,
   LogOut,
-  Coffee
+  Coffee,
+  Utensils
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -19,6 +20,7 @@ export const Sidebar: React.FC = () => {
   const menuItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Customers', path: '/customers', icon: Users },
+    { name: 'Menu', path: '/menu', icon: Utensils },
     { name: 'Transactions', path: '/transactions', icon: Receipt },
     { name: 'Rewards', path: '/rewards', icon: Gift },
     { name: 'Analytics', path: '/analytics', icon: BarChart3 },

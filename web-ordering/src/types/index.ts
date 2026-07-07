@@ -31,6 +31,7 @@ export interface Transaction {
   bill_amount: number;
   visit_number: number;
   created_at: string;
+  items?: TransactionItem[];
   customer?: {
     name: string;
     phone: string;
@@ -48,4 +49,28 @@ export interface RewardRedemption {
     name: string;
     phone: string;
   };
+}
+
+export interface MenuCategory {
+  id: string;
+  cafe_id: string;
+  name: string;
+  created_at: string;
+}
+
+export interface MenuItem {
+  id: string;
+  category_id: string;
+  cafe_id: string;
+  name: string;
+  price: number;
+  description: string | null;
+  created_at: string;
+}
+
+export interface TransactionItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
 }

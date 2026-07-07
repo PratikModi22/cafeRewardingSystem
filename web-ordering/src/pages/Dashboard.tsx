@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../services/supabase';
-import type { Customer, Transaction, RewardRedemption } from '../types';
+import type { Customer, Transaction, RewardRedemption, MenuCategory, MenuItem } from '../types';
 import {
   Users,
   Coffee,
@@ -13,7 +13,9 @@ import {
   CheckCircle,
   History,
   UserPlus,
-  Loader2
+  Loader2,
+  ShoppingCart,
+  Minus
 } from 'lucide-react';
 
 export const Dashboard: React.FC = () => {
@@ -51,17 +53,79 @@ export const Dashboard: React.FC = () => {
   const [recentRedemptions, setRecentRedemptions] = useState<RewardRedemption[]>([]);
   const [loadingFeeds, setLoadingFeeds] = useState(true);
 
+  // Menu Checkout states
+  const [menuCategories, setMenuCategories] = useState<MenuCategory[]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [checkoutItems, setCheckoutItems] = useState<{ id: string; name: string; price: number; quantity: number }[]>([]);
+  const [activeCheckoutCatId, setActiveCheckoutCatId] = useState<string | null>(null);
+  const [menuSearchQuery, setMenuSearchQuery] = useState('');
+
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (cafe) {
       fetchMetrics();
       fetchFeeds();
+      fetchMenuData();
       if (searchInputRef.current) {
         searchInputRef.current.focus();
       }
     }
   }, [cafe]);
+
+  const fetchMenuData = async () => {
+    if (!cafe) return;
+    try {
+      const { data: cats } = await supabase
+        .from('menu_categories')
+        .select('*')
+        .eq('cafe_id', cafe.id)
+        .order('name');
+      setMenuCategories(cats || []);
+      if (cats && cats.length > 0) {
+        setActiveCheckoutCatId(cats[0].id);
+      }
+
+      const { data: items } = await supabase
+        .from('menu_items')
+        .select('*')
+        .eq('cafe_id', cafe.id)
+        .order('name');
+      setMenuItems(items || []);
+    } catch (err) {
+      console.error('Error loading menu:', err);
+    }
+  };
+
+  useEffect(() => {
+    const sum = checkoutItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    if (sum > 0) {
+      setBillAmount(sum.toString());
+    } else {
+      setBillAmount('');
+    }
+  }, [checkoutItems]);
+
+  const handleAddItemToCheckout = (item: MenuItem) => {
+    setCheckoutItems((prev) => {
+      const existing = prev.find((i) => i.id === item.id);
+      if (existing) {
+        return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+      }
+      return [...prev, { id: item.id, name: item.name, price: Number(item.price), quantity: 1 }];
+    });
+  };
+
+  const handleRemoveItemFromCheckout = (itemId: string) => {
+    setCheckoutItems((prev) => {
+      const existing = prev.find((i) => i.id === itemId);
+      if (!existing) return prev;
+      if (existing.quantity === 1) {
+        return prev.filter((i) => i.id !== itemId);
+      }
+      return prev.map((i) => i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i);
+    });
+  };
 
   // Handle phone changes to trigger auto search on 10 digits
   const handlePhoneChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -253,7 +317,8 @@ export const Dashboard: React.FC = () => {
           customer_id: selectedCustomer.id,
           cafe_id: cafe.id,
           bill_amount: amount,
-          visit_number: newTotalVisits
+          visit_number: newTotalVisits,
+          items: checkoutItems
         });
 
       if (txError) throw txError;
@@ -274,6 +339,7 @@ export const Dashboard: React.FC = () => {
 
       setSelectedCustomer(updatedCust);
       setShowAddVisit(false);
+      setCheckoutItems([]);
       setBillAmount('');
       fetchMetrics();
       fetchFeeds();
@@ -618,58 +684,199 @@ export const Dashboard: React.FC = () => {
       {showAddVisit && selectedCustomer && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-[#07090e]/80 backdrop-blur-sm" onClick={() => setShowAddVisit(false)} />
+          <div className="absolute inset-0 bg-[#07090e]/80 backdrop-blur-sm" onClick={() => { setShowAddVisit(false); setCheckoutItems([]); }} />
           {/* Dialog Container */}
-          <div className="relative w-full max-w-sm bg-[#0f172a] border border-[#1e293b] p-6 rounded-3xl shadow-2xl animate-scaleUp">
-            <h3 className="text-lg font-bold text-white tracking-tight m-0">Record Visit</h3>
-            <p className="text-xs text-slate-400 mt-1">Add a visit milestone for <span className="text-white font-semibold">{selectedCustomer.name}</span>.</p>
-
-            <form onSubmit={handleAddVisitSubmit} className="mt-5 space-y-4">
+          <div className="relative w-full max-w-4xl bg-[#0f172a] border border-[#1e293b] p-6 rounded-3xl shadow-2xl animate-scaleUp flex flex-col md:flex-row gap-6 max-h-[90vh] overflow-hidden text-left">
+            
+            {/* Left Pane: Menu Select (width 3/5) */}
+            <div className="flex-1 md:w-3/5 flex flex-col overflow-hidden min-h-[350px]">
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">
-                  Bill Amount (Optional)
-                </label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 font-semibold text-sm">
-                    ₹
-                  </span>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={billAmount}
-                    onChange={(e) => setBillAmount(e.target.value)}
-                    placeholder="Enter bill value"
-                    className="w-full bg-[#1e293b] text-white pl-8 pr-4 py-2.5 rounded-xl border border-[#334155] focus:border-brand-500/70 focus:outline-none text-sm placeholder:text-slate-500 font-medium"
-                    autoFocus
-                  />
+                <h3 className="text-lg font-bold text-white tracking-tight m-0">Cafe Menu Selection</h3>
+                <p className="text-xs text-slate-400 mt-1">Select items below to auto-calculate the ticket total.</p>
+              </div>
+
+              {/* Menu Search */}
+              <div className="relative mt-3 shrink-0">
+                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+                  <Search className="w-4 h-4" />
+                </span>
+                <input
+                  type="text"
+                  value={menuSearchQuery}
+                  onChange={(e) => setMenuSearchQuery(e.target.value)}
+                  placeholder="Search item..."
+                  className="w-full bg-[#1e293b] text-white pl-10 pr-4 py-2.5 rounded-xl border border-[#334155] focus:border-brand-500/70 focus:outline-none text-xs font-medium placeholder:text-slate-500"
+                />
+              </div>
+
+              {/* Category selector */}
+              {menuCategories.length > 0 && !menuSearchQuery && (
+                <div className="flex gap-2 overflow-x-auto py-2.5 mt-2 shrink-0 border-b border-[#1e293b] scrollbar-none">
+                  {menuCategories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setActiveCheckoutCatId(cat.id)}
+                      className={`px-3 py-1.5 rounded-lg text-[10px] font-bold shrink-0 transition-all duration-200 cursor-pointer ${
+                        activeCheckoutCatId === cat.id
+                          ? 'bg-brand-500 text-white shadow-sm shadow-brand-500/15'
+                          : 'bg-[#1e293b]/60 text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Items Grid */}
+              <div className="flex-1 overflow-y-auto mt-3 pr-1 space-y-2">
+                {menuItems.filter((i) => {
+                  const matchesSearch = i.name.toLowerCase().includes(menuSearchQuery.toLowerCase());
+                  if (menuSearchQuery) return matchesSearch;
+                  return i.category_id === activeCheckoutCatId;
+                }).length === 0 ? (
+                  <div className="py-12 text-center text-slate-500 text-xs italic">
+                    No menu items found.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {menuItems.filter((i) => {
+                      const matchesSearch = i.name.toLowerCase().includes(menuSearchQuery.toLowerCase());
+                      if (menuSearchQuery) return matchesSearch;
+                      return i.category_id === activeCheckoutCatId;
+                    }).map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => handleAddItemToCheckout(item)}
+                        className="bg-[#1e293b]/40 hover:bg-[#1e293b]/80 border border-[#334155]/60 hover:border-brand-500/30 p-3 rounded-xl flex items-center justify-between text-left transition-all duration-150 cursor-pointer group"
+                      >
+                        <div className="overflow-hidden mr-2">
+                          <span className="font-bold text-xs text-white block truncate group-hover:text-brand-400">{item.name}</span>
+                          {item.description && <span className="text-[10px] text-slate-500 block truncate mt-0.5">{item.description}</span>}
+                        </div>
+                        <span className="font-mono text-xs font-bold text-slate-300">₹{Number(item.price).toFixed(0)}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right Pane: Checkout Invoice Summary (width 2/5) */}
+            <div className="md:w-2/5 flex flex-col justify-between border-t md:border-t-0 md:border-l border-[#1e293b] pt-4 md:pt-0 md:pl-6 min-h-[300px] overflow-hidden">
+              <div className="flex flex-col overflow-hidden flex-1">
+                <div className="flex items-center justify-between shrink-0">
+                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <ShoppingCart className="w-4 h-4 text-brand-400" />
+                    Checkout Chits
+                  </h4>
+                  {checkoutItems.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setCheckoutItems([])}
+                      className="text-[10px] text-slate-500 hover:text-rose-400 font-semibold cursor-pointer"
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+
+                {/* Selected checkout items list */}
+                <div className="flex-1 overflow-y-auto mt-4 space-y-2 pr-1 min-h-[120px]">
+                  {checkoutItems.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center text-slate-500 text-xs italic py-12">
+                      <span>Empty check-in chit.</span>
+                      <span className="text-[10px] mt-1 text-slate-600">Select items on the left or type manual price.</span>
+                    </div>
+                  ) : (
+                    checkoutItems.map((item) => (
+                      <div key={item.id} className="flex items-center justify-between bg-[#1e293b]/20 border border-[#1e293b] p-2.5 rounded-xl text-xs">
+                        <div className="overflow-hidden mr-2">
+                          <span className="font-bold text-white block truncate">{item.name}</span>
+                          <span className="text-[10px] text-slate-500">₹{item.price.toFixed(2)} × {item.quantity}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveItemFromCheckout(item.id)}
+                            className="w-6 h-6 rounded-lg bg-[#1e293b] hover:bg-slate-800 border border-[#334155] flex items-center justify-center text-slate-400 hover:text-white cursor-pointer"
+                          >
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                          <span className="font-bold text-white text-xs w-5 text-center">{item.quantity}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const found = menuItems.find((m) => m.id === item.id);
+                              if (found) handleAddItemToCheckout(found);
+                            }}
+                            className="w-6 h-6 rounded-lg bg-[#1e293b] hover:bg-slate-800 border border-[#334155] flex items-center justify-center text-slate-400 hover:text-white cursor-pointer"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowAddVisit(false)}
-                  className="flex-1 bg-transparent hover:bg-slate-800 border border-[#334155] text-slate-300 font-semibold py-2.5 rounded-xl text-xs transition-colors duration-200 cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={submittingVisit}
-                  className="flex-1 bg-brand-500 hover:bg-brand-600 disabled:bg-brand-500/50 text-white font-semibold py-2.5 rounded-xl text-xs transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
-                >
-                  {submittingVisit ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <>
-                      <Plus className="w-4 h-4" />
-                      Save Visit
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
+              {/* Subtotal & Final Edit price */}
+              <form onSubmit={handleAddVisitSubmit} className="mt-4 border-t border-[#1e293b] pt-4 space-y-4 shrink-0">
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs text-slate-400">
+                    <span>Menu Sum Total:</span>
+                    <span className="font-mono text-slate-200">₹{checkoutItems.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2)}</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1.5">
+                      Final Billing Price (Editable)
+                    </label>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-semibold text-xs">
+                        ₹
+                      </span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={billAmount}
+                        onChange={(e) => setBillAmount(e.target.value)}
+                        placeholder="0.00"
+                        className="w-full bg-[#1e293b] text-white pl-8 pr-4 py-2 rounded-xl border border-[#334155] focus:border-brand-500/70 focus:outline-none text-xs placeholder:text-slate-600 font-bold font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => { setShowAddVisit(false); setCheckoutItems([]); }}
+                    className="flex-1 bg-transparent hover:bg-slate-800 border border-[#334155] text-slate-300 font-semibold py-2 rounded-xl text-[10px] transition-colors duration-200 cursor-pointer text-center"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submittingVisit}
+                    className="flex-1 bg-brand-500 hover:bg-brand-600 disabled:bg-brand-500/50 text-white font-semibold py-2 rounded-xl text-[10px] transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer shadow-md"
+                  >
+                    {submittingVisit ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <>
+                        <Plus className="w-3.5 h-3.5" />
+                        Save Visit
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}

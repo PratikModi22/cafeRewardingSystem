@@ -4,7 +4,7 @@ import { supabase } from '../services/supabase';
 import { Save, Copy, Check, Download, QrCode, Store, Gift, Coffee, Loader2 } from 'lucide-react';
 
 export const Settings: React.FC = () => {
-  const { cafe, setCafe } = useAuth();
+  const { cafe, setCafe, refreshCafe } = useAuth();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -48,6 +48,7 @@ export const Settings: React.FC = () => {
 
       if (error) throw error;
       setCafe(data);
+      await refreshCafe();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {

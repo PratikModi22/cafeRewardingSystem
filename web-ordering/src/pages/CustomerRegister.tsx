@@ -155,7 +155,7 @@ export const CustomerRegister: React.FC = () => {
               <div>
                 <p className="font-bold text-white">Join & Earn Rewards!</p>
                 <p className="mt-1 leading-normal text-slate-400">
-                  Earn check-ins with your orders. Collect <span className="text-white font-bold">{cafe?.reward_threshold} visits</span> to unlock a <span className="text-emerald-400 font-bold">"{cafe?.reward_name}"</span>!
+                  {cafe?.reward_description || `Earn check-ins with your orders. Collect ${cafe?.reward_threshold || 10} visits to unlock a "${cafe?.reward_name || 'Reward'}"!`}
                 </p>
               </div>
             </div>

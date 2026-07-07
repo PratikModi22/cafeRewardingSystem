@@ -338,19 +338,30 @@ export const Customers: React.FC = () => {
                         <p className="text-xs text-slate-500 italic py-2">No visits logged yet.</p>
                       ) : (
                         custTransactions.map((tx) => (
-                          <div key={tx.id} className="flex items-center justify-between p-3 rounded-xl bg-[#1e293b]/20 border border-[#1e293b]/80 text-xs">
-                            <div>
-                              <p className="font-semibold text-slate-200 m-0">Visit #{tx.visit_number}</p>
-                              <span className="text-[10px] text-slate-500 mt-1 block">
-                                {new Date(tx.created_at).toLocaleString('en-IN', {
-                                  day: 'numeric',
-                                  month: 'short',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </span>
+                          <div key={tx.id} className="flex flex-col gap-2 p-3 rounded-xl bg-[#1e293b]/20 border border-[#1e293b]/80 text-xs">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-semibold text-slate-200 m-0">Visit #{tx.visit_number}</p>
+                                <span className="text-[10px] text-slate-500 mt-1 block">
+                                  {new Date(tx.created_at).toLocaleString('en-IN', {
+                                    day: 'numeric',
+                                    month: 'short',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </span>
+                              </div>
+                              <span className="font-semibold text-white">₹{Number(tx.bill_amount).toFixed(2)}</span>
                             </div>
-                            <span className="font-semibold text-white">₹{Number(tx.bill_amount).toFixed(2)}</span>
+                            {tx.items && tx.items.length > 0 && (
+                              <div className="border-t border-[#1e293b] pt-1.5 flex flex-wrap gap-1">
+                                {tx.items.map((item, idx) => (
+                                  <span key={idx} className="bg-[#1e293b] text-slate-300 px-2 py-0.5 rounded-lg text-[9px] font-medium">
+                                    {item.name} × {item.quantity}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         ))
                       )}
