@@ -1,24 +1,194 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #fefcf6;
-  --color-brand-100: #fbf5e6;
-  --color-brand-200: #f6e6c1;
-  --color-brand-300: #eed091;
-  --color-brand-400: #e2b25b;
-  --color-brand-500: #d49331;
-  --color-brand-600: #b57422;
-  --color-brand-700: #8f541a;
-  --color-brand-800: #704017;
-  --color-brand-900: #583215;
-  --color-brand-950: #301809;
+  /* Premium Gold Theme Colors */
+  --color-brand-50: #faf7f0;
+  --color-brand-100: #f3eccf;
+  --color-brand-200: #e7d79f;
+  --color-brand-300: #dbbe6c;
+  --color-brand-400: #cda85c;
+  --color-brand-500: #b89349; /* Aesthetic Gold */
+  --color-brand-600: #9d7c39;
+  --color-brand-700: #7e622b;
+  --color-brand-800: #624b20;
+  --color-brand-900: #4e3c1a;
+  --color-brand-950: #2b1f0b;
+
+  /* Premium Pista Green Colors */
+  --color-pista-50: #f4f8f5;
+  --color-pista-100: #e2ede5;
+  --color-pista-200: #c9ddcd;
+  --color-pista-300: #a3c3aa;
+  --color-pista-400: #77a181;
+  --color-pista-500: #5a7c65; /* Aesthetic Pista Green */
+  --color-pista-600: #4a6853;
+  --color-pista-700: #3b5343;
+  --color-pista-800: #2f4335;
+  --color-pista-900: #27372d;
+  --color-pista-950: #141e18;
 }
 
 body {
-  background-color: #0b0f19;
-  color: #f3f4f6;
+  background-color: #f7f5ee;
+  color: #1e2921;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
   min-height: 100vh;
 }
+
+/* ==========================================================================
+   AESTHETIC LIGHT/WARM MODE OVERRIDES
+   ========================================================================== */
+
+/* Main Viewport Background Override */
+.bg-\[\#0b0f19\] {
+  background-color: #f7f5ee !important; /* Aesthetic Beige Background */
+}
+
+/* Sidebar Panel Override (Warm Forest Pista Green) */
+aside.bg-\[\#0f172a\] {
+  background-color: #273c2f !important;
+  border-right-color: #1a2a20 !important;
+}
+aside.bg-\[\#0f172a\] .text-white {
+  color: #ffffff !important;
+}
+aside.bg-\[\#0f172a\] .text-slate-400,
+aside.bg-\[\#0f172a\] .text-slate-300 {
+  color: #a3c3aa !important;
+}
+aside.bg-\[\#0f172a\] .hover\:bg-\[\#1e293b\]:hover {
+  background-color: #314a3a !important;
+  color: #ffffff !important;
+}
+aside.bg-\[\#0f172a\] .border-transparent {
+  border-color: transparent !important;
+}
+
+/* Card Panel Background Override (Pure White Cards) */
+.bg-\[\#0f172a\],
+header.bg-\[\#0f172a\] {
+  background-color: #ffffff !important;
+  border-color: #e6dfcc !important;
+  box-shadow: 0 4px 20px -2px rgba(139, 150, 139, 0.06) !important;
+}
+
+/* Inputs & Highlight Boxes Background Override (Warm Beige Highlight) */
+.bg-\[\#1e293b\]\/60,
+.bg-\[\#1e293b\]\/50,
+.bg-\[\#1e293b\]\/40,
+.bg-\[\#1e293b\]\/20,
+.bg-\[\#1e293b\] {
+  background-color: #fcfbfa !important;
+  border-color: #e4decb !important;
+  color: #1e2920 !important;
+}
+.bg-\[\#1e293b\]\/20 {
+  background-color: #f6f4eb !important;
+}
+.bg-\[\#1e293b\]\/10 {
+  background-color: #f7f5ee !important;
+  border-color: #e6dfcc !important;
+}
+.text-slate-300.font-mono {
+  color: #273c2f !important;
+}
+
+/* Focus Input outlines */
+.focus\:border-brand-500\/70:focus {
+  border-color: #b89349 !important;
+  box-ring: 2px #b89349 !important;
+}
+
+/* Borders Override */
+.border-\[\#1e293b\],
+.border-\[\#334155\],
+.border-\[\#334155\]\/60,
+.border-\[\#334155\]\/30,
+.border-b,
+.border-r,
+.border-t,
+.divide-\[\#1e293b\] > * {
+  border-color: #e6dfcc !important;
+}
+
+/* Text Colors Override */
+.text-slate-100 { color: #1c2720 !important; }
+.text-slate-200 { color: #27372d !important; }
+.text-slate-300 { color: #3e4f44 !important; }
+.text-slate-400 { color: #5c6c61 !important; }
+.text-slate-500 { color: #829286 !important; }
+
+/* Global Text White elements (except on gold/pista/emerald background buttons) */
+.text-white:not(.bg-brand-500 *):not(.bg-brand-600 *):not(aside *):not(button.bg-brand-500 *):not(.bg-emerald-500 *):not(.bg-\[\#005c4b\] *) {
+  color: #1c2720 !important;
+}
+
+/* Modals Backdrops */
+.bg-\[\#07090e\]\/80 {
+  background-color: rgba(30, 42, 34, 0.4) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Fix text and layout readability on specific pages */
+header .text-slate-500 {
+  color: #5c6c61 !important;
+}
+
+/* Mobile mockup green bubble stays dark green text */
+.bg-\[\#005c4b\] {
+  background-color: #4a6853 !important; /* Pista Green Bubble */
+  border-color: #3b5343 !important;
+}
+
+/* ==========================================================================
+   SPECIFIC SIDEBAR & LOGIN BANNER VISIBILITY RULES
+   ========================================================================== */
+
+/* Force sidebar links and text to be soft cream/pista green for visibility */
+aside.bg-\[\#0f172a\] a,
+aside.bg-\[\#0f172a\] a span,
+aside.bg-\[\#0f172a\] a p,
+aside.bg-\[\#0f172a\] .text-slate-300,
+aside.bg-\[\#0f172a\] .text-slate-400 {
+  color: #c9ddcd !important; /* Light pistachio green */
+}
+
+/* Active item text in sidebar is gold/white */
+aside.bg-\[\#0f172a\] a.bg-brand-500,
+aside.bg-\[\#0f172a\] a.bg-brand-500 *,
+aside.bg-\[\#0f172a\] a.bg-brand-500 svg {
+  color: #ffffff !important; /* White text on Gold background active item */
+}
+
+/* Hover item text in sidebar */
+aside.bg-\[\#0f172a\] a:hover:not(.bg-brand-500),
+aside.bg-\[\#0f172a\] a:hover:not(.bg-brand-500) *,
+aside.bg-\[\#0f172a\] a:hover:not(.bg-brand-500) svg {
+  color: #ffffff !important;
+}
+
+/* Sidebar header text: Gold */
+aside.bg-\[\#0f172a\] h2 {
+  color: #dbbe6c !important; /* Luxury Gold */
+}
+aside.bg-\[\#0f172a\] span.text-slate-500 {
+  color: #a3c3aa !important; /* Light pista green */
+}
+
+/* Left banner text colors (Pista Green background) */
+.bg-\[\#273d2f\] h1 {
+  color: #dbbe6c !important; /* Luxury Gold Title */
+}
+.bg-\[\#273d2f\] p {
+  color: #e2ede5 !important; /* Light pistachio/beige description */
+}
+.bg-\[\#273d2f\] span {
+  color: #dbbe6c !important; /* Gold logo text */
+}
+.bg-\[\#273d2f\] .text-white {
+  color: #ffffff !important;
+}
+
+

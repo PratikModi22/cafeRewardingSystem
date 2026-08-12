@@ -15,6 +15,9 @@ export const Settings: React.FC = () => {
   const [rewardName, setRewardName] = useState('Free Coffee');
   const [rewardThreshold, setRewardThreshold] = useState(10);
   const [rewardDescription, setRewardDescription] = useState('');
+  const [whatsappAccessToken, setWhatsappAccessToken] = useState('');
+  const [whatsappPhoneNumberId, setWhatsappPhoneNumberId] = useState('');
+  const [whatsappBusinessAccountId, setWhatsappBusinessAccountId] = useState('');
 
   useEffect(() => {
     if (cafe) {
@@ -23,6 +26,9 @@ export const Settings: React.FC = () => {
       setRewardName(cafe.reward_name);
       setRewardThreshold(cafe.reward_threshold);
       setRewardDescription(cafe.reward_description || '');
+      setWhatsappAccessToken(cafe.whatsapp_access_token || '');
+      setWhatsappPhoneNumberId(cafe.whatsapp_phone_number_id || '');
+      setWhatsappBusinessAccountId(cafe.whatsapp_business_account_id || '');
     }
   }, [cafe]);
 
@@ -41,6 +47,9 @@ export const Settings: React.FC = () => {
           reward_name: rewardName,
           reward_threshold: Number(rewardThreshold),
           reward_description: rewardDescription || null,
+          whatsapp_access_token: whatsappAccessToken || null,
+          whatsapp_phone_number_id: whatsappPhoneNumberId || null,
+          whatsapp_business_account_id: whatsappBusinessAccountId || null,
         })
         .eq('id', cafe.id)
         .select()
@@ -197,6 +206,58 @@ export const Settings: React.FC = () => {
               placeholder="Receive a free hot beverage of your choice after collecting 10 check-ins."
               className="w-full bg-[#1e293b]/60 text-white px-4 py-2.5 rounded-xl border border-[#334155] focus:border-brand-500/70 focus:outline-none text-sm placeholder:text-slate-500"
             />
+          </div>
+
+          {/* WhatsApp API Configuration */}
+          <div className="border-t border-[#1e293b] pt-5 space-y-4">
+            <div>
+              <h3 className="text-sm font-bold text-white tracking-tight m-0">WhatsApp Business API Settings</h3>
+              <p className="text-[11px] text-slate-400 mt-1">Configure Meta Cloud API credentials to run marketing campaigns.</p>
+            </div>
+
+            {/* Access Token */}
+            <div>
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                Meta Access Token
+              </label>
+              <input
+                type="password"
+                value={whatsappAccessToken}
+                onChange={(e) => setWhatsappAccessToken(e.target.value)}
+                placeholder="EAAQD..."
+                className="w-full bg-[#1e293b]/60 text-white px-4 py-2.5 rounded-xl border border-[#334155] focus:border-brand-500/70 focus:outline-none text-sm placeholder:text-slate-500 font-mono"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Phone Number ID */}
+              <div>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                  Phone Number ID
+                </label>
+                <input
+                  type="text"
+                  value={whatsappPhoneNumberId}
+                  onChange={(e) => setWhatsappPhoneNumberId(e.target.value)}
+                  placeholder="104927..."
+                  className="w-full bg-[#1e293b]/60 text-white px-4 py-2.5 rounded-xl border border-[#334155] focus:border-brand-500/70 focus:outline-none text-sm placeholder:text-slate-500 font-mono"
+                />
+              </div>
+
+              {/* Business Account ID */}
+              <div>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                  WhatsApp Business Account ID (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={whatsappBusinessAccountId}
+                  onChange={(e) => setWhatsappBusinessAccountId(e.target.value)}
+                  placeholder="109287..."
+                  className="w-full bg-[#1e293b]/60 text-white px-4 py-2.5 rounded-xl border border-[#334155] focus:border-brand-500/70 focus:outline-none text-sm placeholder:text-slate-500 font-mono"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="pt-2">

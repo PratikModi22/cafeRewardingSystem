@@ -10,7 +10,8 @@ import {
   Settings as SettingsIcon,
   LogOut,
   Coffee,
-  Utensils
+  Utensils,
+  MessageSquare
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -24,6 +25,7 @@ export const Sidebar: React.FC = () => {
     { name: 'Transactions', path: '/transactions', icon: Receipt },
     { name: 'Rewards', path: '/rewards', icon: Gift },
     { name: 'Analytics', path: '/analytics', icon: BarChart3 },
+    { name: 'Marketing', path: '/marketing', icon: MessageSquare },
     { name: 'Settings', path: '/settings', icon: SettingsIcon },
   ];
 

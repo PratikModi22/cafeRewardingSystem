@@ -8,10 +8,8 @@ import {
   Trash2,
   FolderPlus,
   Save,
-  X,
   Loader2,
   Coffee,
-  IndianRupee,
   AlertCircle
 } from 'lucide-react';
 

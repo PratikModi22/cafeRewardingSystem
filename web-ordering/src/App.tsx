@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import CustomerRegister from './pages/CustomerRegister';
 import Menu from './pages/Menu';
+import Marketing from './pages/Marketing';
 
 import { Coffee, Store, Loader2 } from 'lucide-react';
 
@@ -180,6 +181,16 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <Analytics />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/marketing"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Marketing />
                 </Layout>
               </ProtectedRoute>
             }
