@@ -1,4 +1,5 @@
 # ☕ Cozy Café Loyalty & WhatsApp Marketing Portal
+<img width="1303" height="858" alt="image" src="https://github.com/user-attachments/assets/c66d1c94-3952-47c6-984f-37bebd66cbdf" />
 
 Welcome to the **Cozy Café Loyalty & WhatsApp Marketing Portal**, a boutique customer relationship management (CRM) and rewards system designed for modern independent coffee shops. 
 
@@ -19,6 +20,9 @@ The user interface is designed to reflect the organic, cozy, and high-end feel o
 ## 🚀 Core Features
 
 ### 1. WhatsApp Template Marketing Tab
+
+<img width="1880" height="1027" alt="image" src="https://github.com/user-attachments/assets/9d546104-4ee4-4dfa-8f5f-f741e81d88c7" />
+
 A complete suite for customer re-engagement:
 *   **Audience List Segmenter:** Create target customer groups based on manual selections or pre-built smart filters (e.g., *Active regulars*, *Inactive users*, *Eligible for rewards*).
 *   **Template Manager:** Compose template messages with simple variable insertion triggers like `{list.name}`, `{current_progress}`, `{reward_name}`, and `{cafe_name}`.
@@ -28,16 +32,22 @@ A complete suite for customer re-engagement:
 *   **Simulated Sandbox Fallback:** Automatically falls back to using `localStorage` simulation if your database tables have not yet been migrated. This lets you test all marketing, template, and wizard flows immediately.
 
 ### 2. Cafe Secrets Setup (Settings Tab)
+<img width="1875" height="727" alt="image" src="https://github.com/user-attachments/assets/a6337016-7a5a-4876-aa9d-ac2523a89bd9" />
+
 Cafe owners can configure their Meta API details:
 *   **Meta Graph API Token:** Masked password field for your System User Access Token.
 *   **Sender Phone Number ID:** The source WhatsApp account ID.
 *   **Business Account ID (Optional):** Meta Business Suite mapping.
 
 ### 3. Customer Directory & Loyalty Card Generator
+<img width="1897" height="724" alt="image" src="https://github.com/user-attachments/assets/bfa49a3b-fc68-43df-9cc8-ab670c3f0b1b" />
+
 *   **Loyalty Cards:** Generates a printable onboarding QR code and registration link for cafe counters.
 *   **Check-in Log:** Automatically increments visit milestones, logs billing transactions, and records reward redemptions.
 
 ### 4. Interactive Menu Builder
+<img width="1892" height="658" alt="image" src="https://github.com/user-attachments/assets/4ea4b607-3d34-49d8-9809-09ce9684f06e" />
+
 *   Interactive panel to customize food & beverage categories and individual items (name, description, pricing) shown to customers.
 
 ---
@@ -101,10 +111,4 @@ Open **[http://localhost:5173/](http://localhost:5173/)** (or the alternative po
 
 ---
 
-## 💾 Git Commands for Deployment
-Keep your repository updated by committing and pushing code changes:
-```bash
-git add .
-git commit -m "Implement WhatsApp marketing templates, audience builder, and Cafe color re-theme"
-git push origin main
-```
+
