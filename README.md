@@ -4,6 +4,7 @@ AND
 a mobile application for restaurant owners to see the status and orders of each table and customize on their menu at any time
 
 ## Restaurant Mobile App
+<img width="1303" height="858" alt="image" src="https://github.com/user-attachments/assets/dc343900-45b2-4435-ac51-81740642126d" />
 
 go to "QR-Dining-MobileApp" folder. Run
 
