@@ -1,68 +1,110 @@
-# In-Dining-QR-Code-Ordering-System
-Our System provides a web application accessed by restaurants customers scanning the code on the table where they can check the menu and order
-AND
-a mobile application for restaurant owners to see the status and orders of each table and customize on their menu at any time
+# ☕ Cozy Café Loyalty & WhatsApp Marketing Portal
 
-## Restaurant Mobile App
+Welcome to the **Cozy Café Loyalty & WhatsApp Marketing Portal**, a boutique customer relationship management (CRM) and rewards system designed for modern independent coffee shops. 
 
-go to "QR-Dining-MobileApp" folder. Run
+Built with a warm, aesthetic color palette of **Pista Green, Cream Beige, and Elegant Gold**, this web portal lets café merchants reward customer visits, manage menus, and drive repeat visits via automated outreach campaigns.
 
-	npm install
-for downloading all the dependencies, then Run
+---
 
-	npm start
-to run the expo mobile app.
+## 🎨 Design System & Aesthetic Theme
 
-First create an account, Note **restaurant name** is the unique identifier for the customers to access your menu so that cannot change later, please be cautious for entering.
-Then login to use the app.
+The user interface is designed to reflect the organic, cozy, and high-end feel of boutique specialty coffee houses:
+*   **Warm Beige Backgrounds** (`#f7f5ee`): Gentle on the eyes, replacing generic dark themes with a cozy bookstore/café vibe.
+*   **Aesthetic Forest Green Sidebar** (`#273c2f`): A rich forest green menu board with light pistachio text highlights.
+*   **Gold Accents** (`#b89349`): Elegant metallic gold active indicators, milestones, and primary buttons.
+*   **Hand-Drawn Cafe Doodles:** Cute sketches of coffee mugs, croissants, and indoor plants integrated into split-screen banners.
 
-	On the table Page, you can add your tables and see or control the orders and status of each table by normal press and long press.
-The color on each table means different status of the table
-* Green: this table do not need your interfere(still browsing menu or no one using the system on this table)
-* Yellow: this table has already ordered and need the restaurant to make and serve the food.
-* Orange: all dishes for this table have been served, need them to pay after finish.
-* Red: this table need some help
+---
 
-![Table Page](https://firebasestorage.googleapis.com/v0/b/qr-code-ordering-system.appspot.com/o/table%20page.png?alt=media&token=3c3195de-5dfa-4f09-87ba-f858c4da3645)
+## 🚀 Core Features
 
+### 1. WhatsApp Template Marketing Tab
+A complete suite for customer re-engagement:
+*   **Audience List Segmenter:** Create target customer groups based on manual selections or pre-built smart filters (e.g., *Active regulars*, *Inactive users*, *Eligible for rewards*).
+*   **Template Manager:** Compose template messages with simple variable insertion triggers like `{list.name}`, `{current_progress}`, `{reward_name}`, and `{cafe_name}`.
+*   **Live Mobile Preview:** A CSS-styled mockup of a smartphone displaying your formatted text in a WhatsApp chat bubble, resolving variables dynamically in real-time.
+*   **Campaign Wizard:** Input campaign details and launch message broadcasts. Displays a live progress meter and a real-time terminal log showing dispatch success or failures.
+*   **Meta Cloud API Integration:** Sends messages directly via the WhatsApp Business API when credentials are provided.
+*   **Simulated Sandbox Fallback:** Automatically falls back to using `localStorage` simulation if your database tables have not yet been migrated. This lets you test all marketing, template, and wizard flows immediately.
 
+### 2. Cafe Secrets Setup (Settings Tab)
+Cafe owners can configure their Meta API details:
+*   **Meta Graph API Token:** Masked password field for your System User Access Token.
+*   **Sender Phone Number ID:** The source WhatsApp account ID.
+*   **Business Account ID (Optional):** Meta Business Suite mapping.
 
-	
-	On the order page, you can see all orders made from all the tables which either finished or still processing
+### 3. Customer Directory & Loyalty Card Generator
+*   **Loyalty Cards:** Generates a printable onboarding QR code and registration link for cafe counters.
+*   **Check-in Log:** Automatically increments visit milestones, logs billing transactions, and records reward redemptions.
 
-![Orders](https://firebasestorage.googleapis.com/v0/b/qr-code-ordering-system.appspot.com/o/Orders.png?alt=media&token=6d576bab-13bd-4a78-8a75-75a9649c09d6)
+### 4. Interactive Menu Builder
+*   Interactive panel to customize food & beverage categories and individual items (name, description, pricing) shown to customers.
 
-	On the  Menu page, you can edit the dish information and categories you want to have.
+---
 
-![Menu Page](https://firebasestorage.googleapis.com/v0/b/qr-code-ordering-system.appspot.com/o/menu%20page.png?alt=media&token=1badacbf-fd41-45a2-9bc9-c8ec14effd83)
+## 🛠️ Technology Stack
 
+*   **Frontend Library:** React 19 (SPA)
+*   **Language:** TypeScript
+*   **Bundler & Dev Server:** Vite
+*   **Styling:** Tailwind CSS v4 & custom HSL CSS color systems
+*   **Backend Database & Auth:** Supabase (Auth, RLS Policies, SQL Queries)
+*   **Icons:** Lucide React
 
-##  Web-ordering
+---
 
-Since we have already host our website using fire base hosting:
-https://qr-code-ordering-system.firebaseapp.com/[restaurant_name]/[table_ID]
-First replace [] with your restaurant name and table name, then copy the link to [QR Code Generator](https://www.qr-code-generator.com) to create a QR code relevant to this table and scan it.
- 
+## 📂 Project Structure
 
-	The default display is promote page which show two of the latest promoted dishes.
-![Promotions](https://firebasestorage.googleapis.com/v0/b/qr-code-ordering-system.appspot.com/o/Promotions.png?alt=media&token=550a9020-7f30-435e-8fd3-47a2eebc9fb2)
+```bash
+├── whatsapp_marketing_tables.sql  # SQL Database Migrations
+├── web-ordering/                  # React Front-end Workspace
+│   ├── public/                    # Static Assets (Doodle images, icons)
+│   ├── src/
+│   │   ├── components/            # Shared layouts, Sidebar navigations
+│   │   ├── hooks/                 # Auth contexts and helpers
+│   │   ├── pages/                 # Marketing, Settings, Customers, Menu
+│   │   ├── services/              # Supabase Client initializations
+│   │   ├── types/                 # TypeScript interfaces
+│   │   ├── main.tsx
+│   │   └── index.css              # Color theme styles & Tailwind overrides
+│   ├── package.json
+│   └── vite.config.ts
+└── README.md                      # Documentation
+```
 
-	Then customers can use the Top app bar to navigate to different pages or ask for help from restaurants.
-![enter image description here](https://firebasestorage.googleapis.com/v0/b/qr-code-ordering-system.appspot.com/o/AppBar.png?alt=media&token=6cadbf75-8118-4b6d-b6ab-2992ce85c932)
+---
 
+## 💻 How to Get Started
 
-	This is the menu pages use to browse dishes by categories or search key words
-![enter image description here](https://firebasestorage.googleapis.com/v0/b/qr-code-ordering-system.appspot.com/o/menu.png?alt=media&token=c30772a8-eb3a-478c-9996-c442b241aabb)
+### 1. Database Schema Migration
+To support templates, segments, campaigns, and campaign logs, run the SQL script on your Supabase instance:
+1. Open your **Supabase Dashboard**.
+2. Go to the **SQL Editor** tab.
+3. Paste the contents of [`whatsapp_marketing_tables.sql`](file:///d:/Cafe%20Rewarding%20System/whatsapp_marketing_tables.sql).
+4. Click **Run**.
 
-	You can check and edit what you and your friends in the same tables have already ordered in the cart page
-![enter image description here](https://firebasestorage.googleapis.com/v0/b/qr-code-ordering-system.appspot.com/o/Cart.png?alt=media&token=cbef1d78-b196-4bc7-84a3-be8e69740c32)
+*(Note: If you run the frontend without migrating the database, the portal will automatically activate **Sandbox Mode** using local storage fallback).*
 
-	After you placing the order, you can go to Order History page to double check it or continue order more dishes.
-![enter image description here](https://firebasestorage.googleapis.com/v0/b/qr-code-ordering-system.appspot.com/o/OrderHistory.png?alt=media&token=9f48a7bc-061d-4eef-b0f8-e828b4356d0e)
+### 2. Setup the Web Application
+Navigate to the frontend directory and install dependencies:
+```bash
+cd web-ordering
+npm install
+```
 
+### 3. Run the Development Server
+Start the local server to run the application in the dev environment:
+```bash
+npm run dev
+```
+Open **[http://localhost:5173/](http://localhost:5173/)** (or the alternative port printed in the terminal) in your browser.
 
-**Tips: All data is shared within each table, you can use multiple devices to scan on same QR code to order together;**
+---
 
-
-
-
+## 💾 Git Commands for Deployment
+Keep your repository updated by committing and pushing code changes:
+```bash
+git add .
+git commit -m "Implement WhatsApp marketing templates, audience builder, and Cafe color re-theme"
+git push origin main
+```
